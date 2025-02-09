@@ -1,0 +1,23 @@
+[project]
+authors = [
+    {name = "Arina Khokhlova", email = "khokhlova.arina.v@gmail.com"},
+]
+requires-python = ">=3.9"
+name = "hexlet-code"
+version = "0.1.0"
+description = "Page analyzer"
+readme = "README.md"
+repository = "https://github.com/nyanyapushkina/python-project-83"
+classifiers = [
+  "Intended Audience :: Education",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Education",
+  "Private :: Do Not Upload",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.7.1",
+    "pytest>=8.3.3",
+    "pytest-cov>=5.0.0",
+]
