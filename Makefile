@@ -28,4 +28,4 @@ build:
 render-start:
 	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
     
-.PHONY: install test lint selfcheck check build
+.PHONY: install test lint check build start dev run test-coverage render-start
