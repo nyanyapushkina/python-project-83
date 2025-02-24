@@ -3,6 +3,8 @@ from contextlib import closing
 from psycopg2 import connect, OperationalError
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
+from datetime import datetime
+
 
 load_dotenv()
 
@@ -29,6 +31,7 @@ def show_all_urls():
 
     return urls
 
+
 def get_urls_by_name(url):
     conn = connect(DATABASE_URL)
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -37,6 +40,18 @@ def get_urls_by_name(url):
     conn.close()
     return url_data
 
+def get_urls_by_id(id_: int):
+    conn = connect(DATABASE_URL)
+    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        q_select = '''SELECT *
+                    FROM urls
+                    WHERE id=(%s)'''
+        cur.execute(q_select, [id_])
+        urls = cur.fetchone()
+    conn.close()
+
+    return urls
+
 
 def add_site(site):
     conn = connect(DATABASE_URL)
@@ -44,3 +59,24 @@ def add_site(site):
         cur.execute("INSERT INTO urls (name, created_at) VALUES (%s, %s)", (site['url'], site['created_at']))
         conn.commit()
     conn.close()
+
+
+def add_url_check(url_id):
+    conn = connect(DATABASE_URL)
+    with conn.cursor() as cur:
+        cur.execute("INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)", (url_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def get_url_checks(url_id):
+    conn = connect(DATABASE_URL)
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC", (url_id,))
+    checks = cur.fetchall()
+    cur.close()
+    conn.close()
+    return checks
+
