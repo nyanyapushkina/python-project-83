@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+
+{% block h1 %}Страница не найдена{% endblock %}
+
+{% block content %}
+    <img src="/static/images/cat_404.jpg" alt="">
+    <p><h2>Здесь нет того, что вы ищете</h2></p>
+    <p><a href="{{ url_for('index') }}" style="text-decoration: none; color: #00ff80;">
+        <input class="btn btn-primary  btn-lg ms-3 px-5 text-uppercase mx-3" value="Вернуться на главную"></a></p>
+   
+{% endblock %}
