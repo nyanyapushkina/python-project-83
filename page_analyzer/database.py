@@ -48,8 +48,8 @@ def get_urls_by_id(id_):
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
         q_select = '''SELECT *
                     FROM urls
-                    WHERE id= %s'''
-        cur.execute(q_select, (id_))
+                    WHERE id = %s'''
+        cur.execute(q_select, (id_,))
         urls = cur.fetchone()
     conn.close()
 
@@ -63,7 +63,7 @@ def get_url_checks(id_):
                     FROM url_checks 
                     WHERE url_id = %s 
                     ORDER BY id DESC '''
-        cur.execute(q_select, (id_))
+        cur.execute(q_select, (id_,))
         checks = cur.fetchall()
     conn.close()
 
