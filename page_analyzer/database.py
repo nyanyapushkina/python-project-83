@@ -1,9 +1,7 @@
 import os
-from contextlib import closing
 from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
-from datetime import datetime
 
 
 load_dotenv()
@@ -58,14 +56,14 @@ def get_urls_by_id(id_):
     return urls
 
 
-def get_url_checks(url_id):
+def get_url_checks(id_):
     conn = connect(DATABASE_URL)
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
         q_select = '''SELECT * 
                     FROM url_checks 
                     WHERE url_id = %s 
                     ORDER BY id DESC '''
-        cur.execute(q_select, (url_id))
+        cur.execute(q_select, (id_))
         checks = cur.fetchall()
     conn.close()
 
