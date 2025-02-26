@@ -56,9 +56,14 @@ def urls_post():
 
     if error:
         if error == 'exists':
-            id_ = get_urls_by_name(url)['id']
-            flash('Страница уже существует', 'alert-info')
-            return redirect(url_for('url_show', id_=id_))
+            url_data = get_urls_by_name(url)
+            if url_data:
+                id_ = url_data[0]['id']
+                flash('Страница уже существует', 'alert-info')
+                return redirect(url_for('url_show', id_=id_))
+            else:
+                flash('Страница не найдена', 'alert-danger')
+                return redirect(url_for('home'))
         else:
             flash('Некорректный URL', 'alert-danger')
 
@@ -77,9 +82,14 @@ def urls_post():
         }
         add_site(site)
 
-        id_ = get_urls_by_name(url)['id']
-        flash('Страница успешно добавлена', 'alert-success')
-        return redirect(url_for('url_show', id_=id_))
+        url_data = get_urls_by_name(url)
+        if url_data:
+            id_ = url_data[0]['id']
+            flash('Страница успешно добавлена', 'alert-success')
+            return redirect(url_for('url_show', id_=id_))
+        else:
+            flash('Ошибка при добавлении страницы', 'alert-danger')
+            return redirect(url_for('home'))
 
 
 @app.route('/urls/<int:id_>')
