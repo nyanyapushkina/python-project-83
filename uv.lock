@@ -288,6 +288,7 @@ dependencies = [
     { name = "bs4" },
     { name = "dotenv" },
     { name = "flask" },
+    { name = "gunicorn" },
     { name = "hatchling" },
     { name = "psycopg2-binary" },
     { name = "requests" },
@@ -296,7 +297,6 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "gunicorn" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "ruff" },
@@ -307,6 +307,7 @@ requires-dist = [
     { name = "bs4", specifier = ">=0.0.2" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "flask", specifier = ">=3.1.0" },
+    { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "hatchling", specifier = ">=1.27.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "requests", specifier = ">=2.32.3" },
@@ -315,7 +316,6 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "gunicorn", specifier = ">=20.1.0" },
     { name = "pytest", specifier = ">=8.3.3" },
     { name = "pytest-cov", specifier = ">=5.0.0" },
     { name = "ruff", specifier = ">=0.7.1" },
