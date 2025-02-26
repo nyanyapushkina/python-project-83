@@ -1,18 +1,15 @@
-from flask import (
-    Flask,
-    flash,
-    get_flashed_messages,
-    redirect,
-    render_template,
-    request,
-    url_for,
-)
+from flask import (Flask,
+                   flash,
+                   get_flashed_messages,
+                   redirect,
+                   render_template,
+                   request,
+                   url_for)
 from datetime import datetime
-from contextlib import closing
-import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
+
+import os
+import requests
 
 from page_analyzer.validator import validate_url
 from page_analyzer.seo_analyzer import get_url_data
@@ -26,13 +23,18 @@ from page_analyzer.database import (get_all_urls,
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-DATABASE_URL = os.getenv('DATABASE_URL')
+app.secret_key = os.getenv('SECRET_KEY')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 @app.route('/')
 def home():
        return render_template('index.html')
+
 
 @app.get('/urls')
 def urls_get():
@@ -43,6 +45,7 @@ def urls_get():
         urls=urls,
         messages=messages
     )
+
 
 @app.post('/urls')
 def urls_post():
@@ -57,41 +60,59 @@ def urls_post():
             id_ = get_urls_by_name(url)['id']
             flash('Страница уже существует', 'alert-info')
             return redirect(url_for('url_show', id_=id_))
-        
-        flash('Некорректный URL', 'alert-danger')
-        if error == 'zero':
-            flash('URL обязателен', 'alert-danger')
-        elif error == 'length':
-            flash('URL превышает 255 символов', 'alert-danger')
+        else:
+            flash('Некорректный URL', 'alert-danger')
 
-        messages = get_flashed_messages(with_categories=True)
-        return render_template('index.html', url=url, messages=messages), 422
+            if error == 'zero':
+                flash('URL обязателен', 'alert-danger')
+            elif error == 'length':
+                flash('URL превышает 255 символов', 'alert-danger')
 
-    site = {
-        'url': url,
-        'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
-    add_site(site)
+            messages = get_flashed_messages(with_categories=True)
+            return render_template('index.html', url=url, messages=messages), 422
+    
+    else:
+        site = {
+            'url': url,
+            'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+        add_site(site)
 
-    id_ = get_urls_by_name(url)['id']
-    flash('Страница успешно добавлена', 'alert-success')
-    return redirect(url_for('url_show', id_=id_))
+        id_ = get_urls_by_name(url)['id']
+        flash('Страница успешно добавлена', 'alert-success')
+        return redirect(url_for('url_show', id_=id_))
+
 
 @app.route('/urls/<int:id_>')
 def url_show(id_):
-    conn = psycopg2.connect(DATABASE_URL)
-    with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute("SELECT * FROM urls WHERE id = %s", (id_,))
-        url = cur.fetchone()
-    conn.close()
-
+    url = get_urls_by_id(id_)
+    checks = get_url_checks(id_)
     messages = get_flashed_messages(with_categories=True)
-    return render_template(
-        'urls.html',
-        url=url,
-        messages=messages
-    )
+    
+    if url:
+        return render_template(
+            'url.html',
+            url=url,
+            checks=checks,
+            messages=messages
+        )
+    else:
+        return redirect(url_for('page_not_found'))
 
 
-if __name__ == '__main__':
-    app.run()
+@app.post('/urls/<int:id_>/checks')
+def url_check(id_):
+    url = get_urls_by_id(id_)['name']
+
+    check = get_url_data(url)
+    
+    if check is None or 'error' in check:
+        flash('Произошла ошибка при проверке', 'alert-danger')
+        
+    else:
+        check['url_id'] = id_
+        check['checked_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        add_check(check)
+        flash('Страница успешно проверена', 'alert-success')
+    
+    return redirect(url_for('url_show', id_=id_))
