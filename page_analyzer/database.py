@@ -1,6 +1,6 @@
 import os
 from contextlib import closing
-from psycopg2 import connect, OperationalError
+from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 from datetime import datetime
@@ -11,7 +11,7 @@ load_dotenv()
 DATABASE_URL = os.getenv('DATABASE_URL')
 
 
-def show_all_urls():
+def get_all_urls():
     conn = connect(DATABASE_URL)
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
         q_select = '''SELECT DISTINCT ON (urls.id)
@@ -32,51 +32,78 @@ def show_all_urls():
     return urls
 
 
-def get_urls_by_name(url):
+def get_urls_by_name(name):
     conn = connect(DATABASE_URL)
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
-        cur.execute("SELECT id FROM urls WHERE name = %s", (url,))
-        url_data = cur.fetchone()
+        q_select = '''SELECT * 
+                    FROM urls 
+                    WHERE name = %s'''
+        cur.execute(q_select, (name,))
+        urls = cur.fetchall()
     conn.close()
-    return url_data
 
-def get_urls_by_id(id_: int):
+    return urls
+
+
+def get_urls_by_id(id_):
     conn = connect(DATABASE_URL)
     with conn.cursor(cursor_factory=RealDictCursor) as cur:
         q_select = '''SELECT *
                     FROM urls
-                    WHERE id=(%s)'''
-        cur.execute(q_select, [id_])
+                    WHERE id= %s'''
+        cur.execute(q_select, (id_))
         urls = cur.fetchone()
     conn.close()
 
     return urls
 
 
+def get_url_checks(url_id):
+    conn = connect(DATABASE_URL)
+    with conn.cursor(cursor_factory=RealDictCursor) as cur:
+        q_select = '''SELECT * 
+                    FROM url_checks 
+                    WHERE url_id = %s 
+                    ORDER BY id DESC '''
+        cur.execute(q_select, (url_id))
+        checks = cur.fetchall()
+    conn.close()
+
+    return checks
+
+
 def add_site(site):
     conn = connect(DATABASE_URL)
     with conn.cursor() as cur:
-        cur.execute("INSERT INTO urls (name, created_at) VALUES (%s, %s)", (site['url'], site['created_at']))
+        q_insert = '''INSERT 
+                    INTO urls (name, created_at) 
+                    VALUES (%s, %s)'''
+        cur.execute(q_insert, (
+            site['url'],
+            site['created_at']))
         conn.commit()
     conn.close()
 
 
-def add_url_check(url_id):
+def add_check(check):
     conn = connect(DATABASE_URL)
     with conn.cursor() as cur:
-        cur.execute("INSERT INTO url_checks (url_id, created_at) VALUES (%s, %s)", (url_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    )
-    conn.commit()
-    cur.close()
+        q_insert = '''INSERT
+                    INTO url_checks(
+                        url_id,
+                        status_code,
+                        h1,
+                        title,
+                        description,
+                        created_at)
+                    VALUES (%s, %s, %s, %s, %s, %s)'''
+        cur.execute(q_insert, (
+            check['url_id'],
+            check['status_code'],
+            check['h1'],
+            check['title'],
+            check['description'],
+            check['checked_at']
+        ))
+        conn.commit()
     conn.close()
-
-
-def get_url_checks(url_id):
-    conn = connect(DATABASE_URL)
-    cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute("SELECT * FROM url_checks WHERE url_id = %s ORDER BY id DESC", (url_id,))
-    checks = cur.fetchall()
-    cur.close()
-    conn.close()
-    return checks
-

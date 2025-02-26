@@ -15,7 +15,13 @@ from psycopg2.extras import RealDictCursor
 from dotenv import load_dotenv
 
 from page_analyzer.validator import validate_url
-from page_analyzer.database import show_all_urls, get_urls_by_name, add_site
+from page_analyzer.seo_analyzer import get_url_data
+from page_analyzer.database import (get_all_urls,
+                                    get_urls_by_name,
+                                    get_urls_by_id,
+                                    get_url_checks,
+                                    add_site,
+                                    add_check)
 
 load_dotenv()
 
@@ -30,7 +36,7 @@ def home():
 
 @app.get('/urls')
 def urls_get():
-    urls = show_all_urls()
+    urls = get_all_urls()
     messages = get_flashed_messages(with_categories=True)
     return render_template(
         'urls.html',
