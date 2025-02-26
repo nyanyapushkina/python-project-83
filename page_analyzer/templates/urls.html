@@ -22,8 +22,7 @@
                                 <a>{{ url['id'] }}</a>
                             </td>
                             <td>
-                                <a href="{{ url_for('one_url', url_id=url['id']) }}" style="text-decoration: none; color: #f5f5f5;" class="custom-link">{{ url['name'] }}</a> <!-- добавил color: #f5f5f5; -->
-                            </td>
+                                <a href="{{ url_for('url_show', id_=url['id']) }}" style="text-decoration: none; color: #f5f5f5;" class="custom-link">{{ url['name'] }}</a>
                             <td>
                                 {% if url['created_at'] %}
                                     {{ url['created_at'] }}
