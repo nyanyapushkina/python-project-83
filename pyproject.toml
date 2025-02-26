@@ -2,11 +2,11 @@
 authors = [
     {name = "Arina Khokhlova", email = "khokhlova.arina.v@gmail.com"},
 ]
-requires-python = "<4.0,>=3.12"
 name = "hexlet-code"
 version = "0.1.0"
 description = "Page analyzer"
 readme = "README.md"
+requires-python = "<4.0,>=3.13"
 
 [tool.uv]
 dev-dependencies = [
