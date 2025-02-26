@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 def get_url_data(url):
-    r = requests.get(url, timeout=10)
+    r = requests.get(url)
 
     if r.status_code != 200:
         raise requests.RequestException(f"Ошибка запроса: статус {r.status_code}")
