@@ -9,7 +9,6 @@ from datetime import datetime
 from dotenv import load_dotenv
 
 import os
-import requests
 
 from page_analyzer.validator import validate_url
 from page_analyzer.seo_analyzer import get_url_data
