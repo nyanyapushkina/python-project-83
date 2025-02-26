@@ -23,7 +23,8 @@ lint:
 check: test lint
 
 build:
-	./build.sh    
+	chmod +x ./build.sh
+	./build.sh
 
 render-start:
 	gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
