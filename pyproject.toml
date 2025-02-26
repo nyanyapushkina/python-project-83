@@ -6,7 +6,7 @@ name = "hexlet-code"
 version = "0.1.0"
 description = "Page analyzer"
 readme = "README.md"
-requires-python = "<4.0,>=3.13"
+requires-python = "<4.0,>=3.0"
 dependencies = [
     "bs4>=0.0.2",
     "datetime>=5.5",
