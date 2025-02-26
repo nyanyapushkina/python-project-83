@@ -12,7 +12,7 @@ dependencies = [
     "datetime>=5.5",
     "dotenv>=0.9.9",
     "flask>=3.1.0",
-    "psycopg2>=2.9.10",
+    "psycopg2-binary>=2.9.10",
     "requests>=2.32.3",
     "validators>=0.34.0",
 ]
