@@ -7,7 +7,7 @@ def get_url_data(url):
         r = requests.get(url)
         r.raise_for_status()
     except requests.RequestException as e:
-        return {'error': str(e)}
+        return {'error': str(e), 'status_code': 502}
 
     check = {'status_code': r.status_code}
 
