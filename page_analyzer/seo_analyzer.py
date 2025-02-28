@@ -2,10 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 
 def get_url_data(url):
-    r = requests.get(url)
-
-    if r.status_code != 200:
-        raise requests.RequestException(f"Ошибка запроса: статус {r.status_code}")
+    try:
+        r = requests.get(url)
+        r.raise_for_status()  # Проверяем, что статус код 200
+    except requests.RequestException as e:
+        return {'error': str(e)}
 
     check = {'status_code': r.status_code}
 
