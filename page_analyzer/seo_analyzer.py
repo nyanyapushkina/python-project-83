@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 def get_url_data(url):
     try:
         r = requests.get(url)
-        r.raise_for_status()  # Проверяем, что статус код 200
+        r.raise_for_status()
     except requests.RequestException as e:
         return {'error': str(e)}
 
