@@ -32,7 +32,7 @@ def page_not_found(e):
 
 @app.route('/')
 def home():
-       return render_template('index.html')
+        return render_template('index.html')
 
 
 @app.get('/urls')
@@ -73,7 +73,9 @@ def urls_post():
                 flash('URL превышает 255 символов', 'alert-danger')
 
             messages = get_flashed_messages(with_categories=True)
-            return render_template('index.html', url=url, messages=messages), 422
+            return render_template('index.html', 
+                                   url=url, 
+                                   messages=messages), 422
     
     else:
         site = {
