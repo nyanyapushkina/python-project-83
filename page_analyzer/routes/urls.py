@@ -68,7 +68,9 @@ def urls():
     else:
         urls = get_all_urls()
         messages = get_flashed_messages(with_categories=True)
-        return render_template('urls.html', urls=urls, messages=messages)
+        return render_template('urls.html', 
+                               urls=urls, 
+                               messages=messages)
 
 
 @urls_bp.route('/<int:id_>')
