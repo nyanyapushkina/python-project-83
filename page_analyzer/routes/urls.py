@@ -22,7 +22,7 @@ from page_analyzer.database import (get_all_urls,
 
 urls_bp = Blueprint('urls', __name__)
 
-@urls_bp.route('/', methods=['GET', 'POST'])
+@urls_bp.route('', methods=['GET', 'POST'])
 def urls():
     if request.method == 'POST':
         url = request.form.get('url')
