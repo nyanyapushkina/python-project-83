@@ -27,6 +27,9 @@ def handle_validation_error(e):
         flash('URL обязателен', 'alert-danger')
     elif isinstance(e, TooLongError):
         flash('URL превышает 255 символов', 'alert-danger')
+
+    messages = get_flashed_messages(with_categories=True)
+
     return render_template('index.html', 
                            url=request.form.get('url'), 
-                           messages=get_flashed_messages(with_categories=True)), 422
+                           messages=messages), 422
