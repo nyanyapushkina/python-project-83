@@ -62,7 +62,6 @@ def urls():
                 flash('URL обязателен', 'alert-danger')
             elif isinstance(e, TooLongError):
                 flash('URL превышает 255 символов', 'alert-danger')
-            
 
             messages = get_flashed_messages(with_categories=True)
 
@@ -94,7 +93,9 @@ def url_show(id_):
     else:
         return redirect(url_for('main.page_not_found'))
 
+
 @urls_bp.route('/<int:id_>/checks', methods=['POST'])
+
 def url_check(id_):
     url = get_urls_by_id(id_)['name']
 
