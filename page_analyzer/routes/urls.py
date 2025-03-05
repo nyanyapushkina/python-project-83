@@ -56,15 +56,20 @@ def urls():
                 return redirect(url_for('main.home'))
 
         except ValidationError as e:
+            flash('Некорректный URL', 'alert-danger')
+
             if isinstance(e, ZeroLengthError):
                 flash('URL обязателен', 'alert-danger')
             elif isinstance(e, TooLongError):
                 flash('URL превышает 255 символов', 'alert-danger')
-            else:
-                flash(str(e), 'alert-danger')
+            
+
+            messages = get_flashed_messages(with_categories=True)
+
             return render_template('index.html', 
                                    url=url, 
-                                   messages=get_flashed_messages(with_categories=True)), 422
+                                   messages=messages), 422
+
     else:
         urls = get_all_urls()
         messages = get_flashed_messages(with_categories=True)
