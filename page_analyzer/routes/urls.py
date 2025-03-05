@@ -22,6 +22,7 @@ from page_analyzer.database import (get_all_urls,
 
 urls_bp = Blueprint('urls', __name__)
 
+
 @urls_bp.route('', methods=['GET', 'POST'])
 def urls():
     if request.method == 'POST':
@@ -95,7 +96,6 @@ def url_show(id_):
 
 
 @urls_bp.route('/<int:id_>/checks', methods=['POST'])
-
 def url_check(id_):
     url = get_urls_by_id(id_)['name']
 
