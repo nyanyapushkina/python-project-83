@@ -1,25 +1,27 @@
 import validators
 from urllib.parse import urlparse
 from page_analyzer.database import get_urls_by_name
+from page_analyzer.exceptions import (ZeroLengthError, TooLongError, 
+                                      InvalidURLError, URLExistsError)
 
 
 def validate_url(url):
     if not url:
-        return {'url': url, 'error': 'zero'}
+        raise ZeroLengthError('URL обязателен')
 
     if len(url) > 255:
-        return {'url': url, 'error': 'length'}
+        raise TooLongError('URL превышает 255 символов')
 
     if not validators.url(url):
-        return {'url': url, 'error': 'invalid'}
+        raise InvalidURLError('Некорректный URL')
 
     parsed_url = urlparse(url)
     if not parsed_url.scheme or not parsed_url.netloc:
-        return {'url': url, 'error': 'invalid'}
+        raise InvalidURLError('Некорректный URL')
 
     norm_url = f'{parsed_url.scheme}://{parsed_url.netloc}'
 
     if get_urls_by_name(norm_url):
-        return {'url': norm_url, 'error': 'exists'}
+        raise URLExistsError('Страница уже существует', norm_url)
 
-    return {'url': norm_url, 'error': None}
+    return norm_url
