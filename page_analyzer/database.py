@@ -8,7 +8,6 @@ connection_pool = pool.SimpleConnectionPool(
     minconn=1,
     maxconn=10,
     dsn=DATABASE_URL,
-    options="-c statement_timeout=30000"
 )
 
 
@@ -30,7 +29,8 @@ def get_all_urls():
             cur.execute(q_select)
             urls = cur.fetchall()
     finally:
-        connection_pool.putconn(conn)
+        if conn:
+            connection_pool.putconn(conn)
 
     return urls
 
@@ -45,7 +45,8 @@ def get_urls_by_name(name):
             cur.execute(q_select, (name,))
             urls = cur.fetchall()
     finally:
-        connection_pool.putconn(conn)
+        if conn:
+            connection_pool.putconn(conn)
 
     return urls
 
@@ -60,7 +61,8 @@ def get_urls_by_id(id_):
             cur.execute(q_select, (id_,))
             urls = cur.fetchone()
     finally:
-        connection_pool.putconn(conn)
+        if conn:
+            connection_pool.putconn(conn)
 
     return urls
 
@@ -75,7 +77,8 @@ def get_url_checks(id_):
             cur.execute(q_select, (id_,))
             checks = cur.fetchall()
     finally:
-        connection_pool.putconn(conn)
+        if conn:
+            connection_pool.putconn(conn)
 
     return checks
 
@@ -92,7 +95,9 @@ def add_site(site):
             ))
             conn.commit()
     finally:
-        connection_pool.putconn(conn)
+        if conn:
+            connection_pool.putconn(conn)
+
 
 def add_check(check):
     conn = connection_pool.getconn()
@@ -117,4 +122,5 @@ def add_check(check):
             ))
             conn.commit()
     finally:
-        connection_pool.putconn(conn)
+        if conn:
+            connection_pool.putconn(conn)
