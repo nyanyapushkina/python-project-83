@@ -5,7 +5,6 @@ from flask import (Blueprint,
                    render_template,
                    request,
                    url_for)
-from datetime import datetime
 
 from page_analyzer.validator import validate_url
 from page_analyzer.exceptions import (ValidationError,
@@ -31,8 +30,7 @@ def urls():
             norm_url = validate_url(url)
 
             site = {
-                'url': norm_url,
-                'created_at': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                'url': norm_url
             }
             add_site(site)
 
@@ -105,7 +103,6 @@ def url_check(id_):
         flash('Произошла ошибка при проверке', 'alert-danger')
     else:
         check['url_id'] = id_
-        check['checked_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         add_check(check)
         flash('Страница успешно проверена', 'alert-success')
 

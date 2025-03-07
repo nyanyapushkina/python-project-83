@@ -1,13 +1,12 @@
-from psycopg2 import pool
+from psycopg2 import connect
 from psycopg2.extras import RealDictCursor
 from page_analyzer.config import Config
 
 DATABASE_URL = Config.DATABASE_URL
 
-connection_pool = pool.SimpleConnectionPool(1, 10, DATABASE_URL)
 
 def get_all_urls():
-    conn = connection_pool.getconn()
+    conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             q_select = '''SELECT DISTINCT ON (urls.id)
@@ -24,13 +23,13 @@ def get_all_urls():
             cur.execute(q_select)
             urls = cur.fetchall()
     finally:
-        connection_pool.putconn(conn)
+        conn.close()
 
     return urls
 
 
 def get_urls_by_name(name):
-    conn = connection_pool.getconn()
+    conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             q_select = '''SELECT * 
@@ -39,13 +38,13 @@ def get_urls_by_name(name):
             cur.execute(q_select, (name,))
             urls = cur.fetchall()
     finally:
-        connection_pool.putconn(conn)
+        conn.close()
 
     return urls
 
 
 def get_urls_by_id(id_):
-    conn = connection_pool.getconn()
+    conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             q_select = '''SELECT *
@@ -54,13 +53,13 @@ def get_urls_by_id(id_):
             cur.execute(q_select, (id_,))
             urls = cur.fetchone()
     finally:
-        connection_pool.putconn(conn)
+        conn.close()
 
     return urls
 
 
 def get_url_checks(id_):
-    conn = connection_pool.getconn()
+    conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
             q_select = '''SELECT * 
@@ -70,28 +69,26 @@ def get_url_checks(id_):
             cur.execute(q_select, (id_,))
             checks = cur.fetchall()
     finally:
-        connection_pool.putconn(conn)
+        conn.close()
 
     return checks
 
 
 def add_site(site):
-    conn = connection_pool.getconn()
+    conn = connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
             q_insert = '''INSERT 
                         INTO urls (name, created_at) 
-                        VALUES (%s, %s)'''
-            cur.execute(q_insert, (
-                site['url'],
-                site['created_at']))
+                        VALUES (%s, NOW())'''
+            cur.execute(q_insert, (site['url'],))
             conn.commit()
     finally:
-        connection_pool.putconn(conn)
+        conn.close()
 
 
 def add_check(check):
-    conn = connection_pool.getconn()
+    conn = connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
             q_insert = '''INSERT
@@ -102,15 +99,14 @@ def add_check(check):
                             title,
                             description,
                             created_at)
-                        VALUES (%s, %s, %s, %s, %s, %s)'''
+                        VALUES (%s, %s, %s, %s, %s, NOW())'''
             cur.execute(q_insert, (
                 check['url_id'],
                 check['status_code'],
                 check['h1'],
                 check['title'],
-                check['description'],
-                check['checked_at']
+                check['description']
             ))
             conn.commit()
     finally:
-        connection_pool.putconn(conn)
+        conn.close()
