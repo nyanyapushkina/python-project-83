@@ -2,7 +2,10 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def get_url_data(url):
+def get_url_data(url: str) -> dict:
+    """
+    Gets data about a website by its URL.
+    """
     try:
         r = requests.get(url)
         r.raise_for_status()

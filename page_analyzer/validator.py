@@ -5,7 +5,10 @@ from page_analyzer.exceptions import (ZeroLengthError, TooLongError,
                                       InvalidURLError, URLExistsError)
 
 
-def validate_url(url):
+def validate_url(url: str) -> str:
+    """
+    Checks if a URL is valid and normalizes it.
+    """
     if not url:
         raise ZeroLengthError('URL обязателен')
 

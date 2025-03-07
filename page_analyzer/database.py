@@ -5,7 +5,11 @@ from page_analyzer.config import Config
 DATABASE_URL = Config.DATABASE_URL
 
 
-def get_all_urls():
+def get_all_urls() -> list[dict]:
+    """"
+    Gets all URLs from the database. 
+    Returns each URL's id, name, last check and status code. 
+    """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -28,7 +32,10 @@ def get_all_urls():
     return urls
 
 
-def get_urls_by_name(name):
+def get_urls_by_name(name: str) -> list[dict]:
+    """"
+    Gets all information about a certain URL by its name.
+    """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -43,7 +50,10 @@ def get_urls_by_name(name):
     return urls
 
 
-def get_urls_by_id(id_):
+def get_urls_by_id(id_: int) -> list[dict]:
+    """"
+    Gets all checks for a certain URL by its ID.
+    """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -58,7 +68,10 @@ def get_urls_by_id(id_):
     return urls
 
 
-def get_url_checks(id_):
+def get_url_checks(id_: int) -> list[dict]:
+    """"
+    Gets all checks for a certain URL by its ID.
+    """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor(cursor_factory=RealDictCursor) as cur:
@@ -74,7 +87,10 @@ def get_url_checks(id_):
     return checks
 
 
-def add_site(site):
+def add_site(site: dict):
+    """"
+    Adds a new URL to the database.
+    """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
@@ -87,7 +103,10 @@ def add_site(site):
         conn.close()
 
 
-def add_check(check):
+def add_check(check: dict):
+    """"
+    Adds a new check for a specific URL.
+    """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
