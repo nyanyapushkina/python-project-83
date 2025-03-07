@@ -1,17 +1,15 @@
-import os
 from psycopg2 import pool
 from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
+from page_analyzer.config import Config
 
-load_dotenv()
-
-DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = Config.DATABASE_URL
 
 connection_pool = pool.SimpleConnectionPool(
     minconn=1,
     maxconn=10,
     dsn=DATABASE_URL
 )
+
 
 def get_all_urls():
     conn = connection_pool.getconn()
@@ -65,7 +63,6 @@ def get_urls_by_id(id_):
 
     return urls
 
-
 def get_url_checks(id_):
     conn = connection_pool.getconn()
     try:
@@ -81,7 +78,6 @@ def get_url_checks(id_):
 
     return checks
 
-
 def add_site(site):
     conn = connection_pool.getconn()
     try:
@@ -91,11 +87,11 @@ def add_site(site):
                         VALUES (%s, %s)'''
             cur.execute(q_insert, (
                 site['url'],
-                site['created_at']))
+                site['created_at']
+            ))
             conn.commit()
     finally:
         connection_pool.putconn(conn)
-
 
 def add_check(check):
     conn = connection_pool.getconn()
