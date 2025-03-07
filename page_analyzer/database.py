@@ -7,7 +7,8 @@ DATABASE_URL = Config.DATABASE_URL
 connection_pool = pool.SimpleConnectionPool(
     minconn=1,
     maxconn=10,
-    dsn=DATABASE_URL
+    dsn=DATABASE_URL,
+    options="-c statement_timeout=30000"
 )
 
 
