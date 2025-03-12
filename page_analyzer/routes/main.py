@@ -1,11 +1,5 @@
 from flask import (Blueprint,
-                   flash,
-                   get_flashed_messages,
-                   render_template,
-                   request)
-from page_analyzer.exceptions import (ValidationError,
-                                      ZeroLengthError, 
-                                      TooLongError)
+                   render_template)
 
 main_bp = Blueprint('main', __name__)
 
