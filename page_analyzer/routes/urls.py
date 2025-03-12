@@ -30,9 +30,9 @@ def urls():
 
             existing_url = get_urls_by_name(norm_url)
             if existing_url:
+                id_ = existing_url[0]['id']
                 flash('Страница уже существует', 'alert-info')
-                return redirect(url_for('urls.url_show', 
-                                        id_=existing_url[0]['id']))
+                return redirect(url_for('urls.url_show', id_=id_))
 
             site = {
                 'url': norm_url
