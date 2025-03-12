@@ -1,11 +1,11 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    Анализатор страниц - {{ url.name }}
+    Анализатор страниц - {{ url.url }}
 {% endblock %}
 
 {% block main %}
-<h1>Сайт: {{ url.name }}</h1>
+<h1>Сайт: {{ url.url }}</h1>
 <div class="table-responsive">
     <table class="table table-bordered table-hover text-nowrap" data-test="url">
         <tbody>
@@ -15,7 +15,7 @@
             </tr>
             <tr>
                 <td>Имя</td>
-                <td>{{ url.name }}</td>
+                <td>{{ url.url }}</td>
             </tr>
             <tr>
                 <td>Дата создания</td>

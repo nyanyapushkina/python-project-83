@@ -10,6 +10,8 @@ class Site:
     url: str
     id: int = None
     created_at: datetime = None
+    last_check: datetime = None
+    status_code: int = None 
 
 
 @dataclass
