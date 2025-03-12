@@ -24,9 +24,11 @@ def page_not_found(e):
 def handle_validation_error(e):
     flash(str(e), 'alert-danger')
     if isinstance(e, ZeroLengthError):
-        flash('URL обязателен', 'alert-danger')
+        flash('URL is required', 'alert-danger')
     elif isinstance(e, TooLongError):
-        flash('URL превышает 255 символов', 'alert-danger')
+        flash('URL exceeds 255 characters', 'alert-danger')
+    else:
+        flash('Invalid URL', 'alert-danger')
 
     messages = get_flashed_messages(with_categories=True)
 

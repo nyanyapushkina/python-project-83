@@ -10,21 +10,21 @@ def validate_url(url: str) -> str:
     Checks if a URL is valid and normalizes it.
     """
     if not url:
-        raise ZeroLengthError('URL is required')
+        raise ZeroLengthError()
 
     if len(url) > 255:
-        raise TooLongError('URL exceeds 255 characters')
+        raise TooLongError()
 
     if not validators.url(url):
-        raise InvalidURLError('Invalid URL')
+        raise InvalidURLError()
 
     parsed_url = urlparse(url)
     if not parsed_url.scheme or not parsed_url.netloc:
-        raise InvalidURLError('Invalid URL')
+        raise InvalidURLError()
 
     norm_url = f'{parsed_url.scheme}://{parsed_url.netloc}'
 
     if get_urls_by_name(norm_url):
-        raise URLExistsError('Page already exists', norm_url)
+        raise URLExistsError(norm_url)
 
     return norm_url

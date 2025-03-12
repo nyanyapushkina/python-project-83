@@ -37,10 +37,10 @@ def urls():
             url_data = get_urls_by_name(norm_url)
             if url_data:
                 id_ = url_data[0]['id']
-                flash('Страница успешно добавлена', 'alert-success')
+                flash('Page successfully added', 'alert-success')
                 return redirect(url_for('urls.url_show', id_=id_))
             else:
-                flash('Ошибка при добавлении страницы', 'alert-danger')
+                flash('Error adding page', 'alert-danger')
                 return redirect(url_for('main.home'))
 
         except URLExistsError as e:
@@ -48,19 +48,19 @@ def urls():
             url_data = get_urls_by_name(norm_url)
             if url_data:
                 id_ = url_data[0]['id']
-                flash('Страница уже существует', 'alert-info')
+                flash('Page already exists', 'alert-info')
                 return redirect(url_for('urls.url_show', id_=id_))
             else:
-                flash('Страница не найдена', 'alert-danger')
+                flash('Page not found', 'alert-danger')
                 return redirect(url_for('main.home'))
 
         except ValidationError as e:
-            flash('Некорректный URL', 'alert-danger')
+            flash('Invalid UR', 'alert-danger')
 
             if isinstance(e, ZeroLengthError):
-                flash('URL обязателен', 'alert-danger')
+                flash('URL is required', 'alert-danger')
             elif isinstance(e, TooLongError):
-                flash('URL превышает 255 символов', 'alert-danger')
+                flash('URL exceeds 255 characters', 'alert-danger')
 
             messages = get_flashed_messages(with_categories=True)
 
@@ -100,10 +100,10 @@ def url_check(id_):
     check = get_url_data(url)
 
     if check is None or 'error' in check:
-        flash('Произошла ошибка при проверке', 'alert-danger')
+        flash('An error occurred during the check', 'alert-danger')
     else:
         check['url_id'] = id_
         add_check(check)
-        flash('Страница успешно проверена', 'alert-success')
+        flash('Page successfully checked', 'alert-success')
 
     return redirect(url_for('urls.url_show', id_=id_))
