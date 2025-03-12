@@ -24,7 +24,4 @@ def validate_url(url: str) -> str:
 
     norm_url = f'{parsed_url.scheme}://{parsed_url.netloc}'
 
-    if get_urls_by_name(norm_url):
-        raise URLExistsError(norm_url)
-
     return norm_url

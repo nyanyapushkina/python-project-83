@@ -20,9 +20,3 @@ class InvalidURLError(ValidationError):
 
     """Incorrect URL"""
     pass
-
-
-class URLExistsError(ValidationError):
-
-    """URL already exists"""
-    pass

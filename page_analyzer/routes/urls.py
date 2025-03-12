@@ -9,8 +9,7 @@ from flask import (Blueprint,
 from page_analyzer.validator import validate_url
 from page_analyzer.exceptions import (ValidationError,
                                       ZeroLengthError, 
-                                      TooLongError, 
-                                      URLExistsError)
+                                      TooLongError)
 from page_analyzer.seo_analyzer import get_url_data
 from page_analyzer.database import (get_all_urls,
                                     get_urls_by_name,
@@ -29,6 +28,12 @@ def urls():
         try:
             norm_url = validate_url(url)
 
+            existing_url = get_urls_by_name(norm_url)
+            if existing_url:
+                flash('Страница уже существует', 'alert-info')
+                return redirect(url_for('urls.url_show', 
+                                        id_=existing_url[0]['id']))
+
             site = {
                 'url': norm_url
             }
@@ -41,17 +46,6 @@ def urls():
                 return redirect(url_for('urls.url_show', id_=id_))
             else:
                 flash('Ошибка при добавлении страницы', 'alert-danger')
-                return redirect(url_for('main.home'))
-
-        except URLExistsError as e:
-            norm_url = e.args[0]
-            url_data = get_urls_by_name(norm_url)
-            if url_data:
-                id_ = url_data[0]['id']
-                flash('Страница уже существует', 'alert-info')
-                return redirect(url_for('urls.url_show', id_=id_))
-            else:
-                flash('Страница не найдена', 'alert-danger')
                 return redirect(url_for('main.home'))
 
         except ValidationError as e:
