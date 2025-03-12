@@ -21,53 +21,54 @@ from page_analyzer.database import (get_all_urls,
 urls_bp = Blueprint('urls', __name__)
 
 
-@urls_bp.route('', methods=['GET', 'POST'])
-def urls():
-    if request.method == 'POST':
-        url = request.form.get('url')
-        try:
-            norm_url = validate_url(url)
+@urls_bp.route('', methods=['GET'])
+def show_urls():
+    urls = get_all_urls()
+    messages = get_flashed_messages(with_categories=True)
+    return render_template('urls.html', 
+                           urls=urls, 
+                           messages=messages)
 
-            existing_url = get_urls_by_name(norm_url)
-            if existing_url:
-                id_ = existing_url[0]['id']
-                flash('Страница уже существует', 'alert-info')
-                return redirect(url_for('urls.url_show', id_=id_))
 
-            site = {
-                'url': norm_url
-            }
-            add_site(site)
+@urls_bp.route('', methods=['POST'])
+def add_url():
+    url = request.form.get('url')
+    try:
+        norm_url = validate_url(url)
 
-            url_data = get_urls_by_name(norm_url)
-            if url_data:
-                id_ = url_data[0]['id']
-                flash('Страница успешно добавлена', 'alert-success')
-                return redirect(url_for('urls.url_show', id_=id_))
-            else:
-                flash('Ошибка при добавлении страницы', 'alert-danger')
-                return redirect(url_for('main.home'))
+        existing_url = get_urls_by_name(norm_url)
+        if existing_url:
+            id_ = existing_url[0]['id']
+            flash('Страница уже существует', 'alert-info')
+            return redirect(url_for('urls.url_show', id_=id_))
 
-        except ValidationError as e:
-            if isinstance(e, ZeroLengthError):
-                flash('URL обязателен', 'alert-danger')
-            elif isinstance(e, TooLongError):
-                flash('URL превышает 255 символов', 'alert-danger')
-            else:
-                flash('Некорректный URL', 'alert-danger')
+        site = {
+            'url': norm_url
+        }
+        add_site(site)
 
-            messages = get_flashed_messages(with_categories=True)
+        url_data = get_urls_by_name(norm_url)
+        if url_data:
+            id_ = url_data[0]['id']
+            flash('Страница успешно добавлена', 'alert-success')
+            return redirect(url_for('urls.url_show', id_=id_))
+        else:
+            flash('Ошибка при добавлении страницы', 'alert-danger')
+            return redirect(url_for('main.home'))
 
-            return render_template('index.html', 
-                                   url=url, 
-                                   messages=messages), 422
-    
-    else:
-        urls = get_all_urls()
+    except ValidationError as e:
+        if isinstance(e, ZeroLengthError):
+            flash('URL обязателен', 'alert-danger')
+        elif isinstance(e, TooLongError):
+            flash('URL превышает 255 символов', 'alert-danger')
+        else:
+            flash('Некорректный URL', 'alert-danger')
+
         messages = get_flashed_messages(with_categories=True)
-        return render_template('urls.html', 
-                               urls=urls, 
-                               messages=messages)
+
+        return render_template('index.html', 
+                                url=url, 
+                                messages=messages), 422
 
 
 @urls_bp.route('/<int:id_>')
