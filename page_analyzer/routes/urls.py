@@ -17,7 +17,7 @@ from page_analyzer.database import (get_all_urls,
                                     get_url_checks,
                                     add_site,
                                     add_check)
-from page_analyzer.models import Site
+from page_analyzer.models import Site, UrlCheck
 
 urls_bp = Blueprint('urls', __name__)
 
@@ -48,7 +48,7 @@ def add_url():
 
         url_data = get_urls_by_name(norm_url)
         if url_data:
-            id_ = url_data[0]['id']
+            id_ = url_data[0].id
             flash('Страница успешно добавлена', 'alert-success')
             return redirect(url_for('urls.url_show', id_=id_))
         else:
@@ -97,7 +97,7 @@ def url_check(id_):
         flash('Произошла ошибка при проверке', 'alert-danger')
     else:
         check['url_id'] = id_
-        add_check(check)
+        add_check(UrlCheck(**check))
         flash('Страница успешно проверена', 'alert-success')
 
     return redirect(url_for('urls.url_show', id_=id_))
