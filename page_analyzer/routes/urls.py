@@ -17,6 +17,7 @@ from page_analyzer.database import (get_all_urls,
                                     get_url_checks,
                                     add_site,
                                     add_check)
+from page_analyzer.models import Site
 
 urls_bp = Blueprint('urls', __name__)
 
@@ -42,9 +43,7 @@ def add_url():
             flash('Страница уже существует', 'alert-info')
             return redirect(url_for('urls.url_show', id_=id_))
 
-        site = {
-            'url': norm_url
-        }
+        site = Site(url=norm_url)
         add_site(site)
 
         url_data = get_urls_by_name(norm_url)
@@ -90,7 +89,7 @@ def url_show(id_):
 
 @urls_bp.route('/<int:id_>/checks', methods=['POST'])
 def url_check(id_):
-    url = get_urls_by_id(id_)['name']
+    url = get_urls_by_id(id_).url
 
     check = get_url_data(url)
 
