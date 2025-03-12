@@ -22,11 +22,12 @@ def page_not_found(e):
 
 @main_bp.errorhandler(ValidationError)
 def handle_validation_error(e):
-    flash(str(e), 'alert-danger')
     if isinstance(e, ZeroLengthError):
         flash('URL обязателен', 'alert-danger')
     elif isinstance(e, TooLongError):
         flash('URL превышает 255 символов', 'alert-danger')
+    else:
+        flash('Некорректный URL', 'alert-danger')
 
     messages = get_flashed_messages(with_categories=True)
 
