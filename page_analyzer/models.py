@@ -7,6 +7,7 @@ class Site:
     """
     Site dataclass
     """
+    id: int = None
     url: str
     created_at: datetime = None
 

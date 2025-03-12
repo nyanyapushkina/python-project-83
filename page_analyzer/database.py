@@ -49,7 +49,7 @@ def get_urls_by_name(name: str) -> list[Site]:
     finally:
         conn.close()
     
-    sites = [Site(url=url['name'], created_at=url.get('created_at')) for url in urls]
+    sites = [Site(id=url['id'], url=url['name'], created_at=url.get('created_at')) for url in urls]
 
     return sites
 
@@ -100,18 +100,21 @@ def get_url_checks(id_: int) -> list[UrlCheck]:
     ) for check in checks]
 
 
-def add_site(site: Site):
+def add_site(site: Site) -> int:
     """"
-    Adds a new URL to the database.
+    Adds a new URL to the database and returns its ID.
     """
     conn = connect(DATABASE_URL)
     try:
         with conn.cursor() as cur:
             q_insert = '''INSERT 
                         INTO urls (name, created_at) 
-                        VALUES (%s, NOW())'''
+                        VALUES (%s, NOW())
+                        RETURNING id'''
             cur.execute(q_insert, (site.url,))
+            site_id = cur.fetchone()[0]
             conn.commit()
+            return site_id
     finally:
         conn.close()
 

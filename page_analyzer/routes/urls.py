@@ -39,21 +39,16 @@ def add_url():
 
         existing_url = get_urls_by_name(norm_url)
         if existing_url:
-            id_ = existing_url[0]['id']
+            id_ = existing_url[0].id
             flash('Страница уже существует', 'alert-info')
             return redirect(url_for('urls.url_show', id_=id_))
 
         site = Site(url=norm_url)
-        add_site(site)
+        site_id = add_site(site)
+        site.id = site_id
 
-        url_data = get_urls_by_name(norm_url)
-        if url_data:
-            id_ = url_data[0].id
-            flash('Страница успешно добавлена', 'alert-success')
-            return redirect(url_for('urls.url_show', id_=id_))
-        else:
-            flash('Ошибка при добавлении страницы', 'alert-danger')
-            return redirect(url_for('main.home'))
+        flash('Страница успешно добавлена', 'alert-success')
+        return redirect(url_for('urls.url_show', id_=site_id))
 
     except ValidationError as e:
         if isinstance(e, ZeroLengthError):
