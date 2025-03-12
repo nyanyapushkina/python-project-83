@@ -75,7 +75,7 @@ def url_show(id_):
         return render_template(
             'url.html',
             url=url,
-            checks=checks,
+            checks=checks if checks else [],
             messages=messages
         )
     else:
@@ -84,9 +84,13 @@ def url_show(id_):
 
 @urls_bp.route('/<int:id_>/checks', methods=['POST'])
 def url_check(id_):
-    url = get_urls_by_id(id_).url
+    url = get_urls_by_id(id_)
+    if not url:
+        flash('Страница не найдена', 'alert-danger')
+        return redirect(url_for('main.home'))
 
-    check = get_url_data(url)
+    url_name = url.url
+    check = get_url_data(url_name)
 
     if check is None or 'error' in check:
         flash('Произошла ошибка при проверке', 'alert-danger')
