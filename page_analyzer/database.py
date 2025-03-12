@@ -56,7 +56,9 @@ def get_urls_by_name(name: str) -> list[Site]:
     finally:
         conn.close()
     
-    sites = [Site(id=url['id'], url=url['name'], created_at=url.get('created_at')) for url in urls]
+    sites = [Site(id=url['id'], 
+                  url=url['name'], 
+                  created_at=url.get('created_at')) for url in urls]
 
     return sites
 
@@ -77,7 +79,9 @@ def get_urls_by_id(id_: int) -> Site:
         conn.close()
     
     if url:
-        return Site(id=url['id'], url=url['name'], created_at=url.get('created_at'))
+        return Site(id=url['id'], 
+                    url=url['name'], 
+                    created_at=url.get('created_at'))
     return None
 
 
