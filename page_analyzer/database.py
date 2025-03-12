@@ -30,12 +30,9 @@ def get_all_urls() -> list[Site]:
     finally:
         conn.close()
 
-    sites = list(map(lambda urls: Site(url=urls['name'], 
-                                     created_at=urls.get('created_at')), 
-                                     urls))
+    sites = [Site(url=url['name'], created_at=url.get('created_at')) for url in urls]
 
     return sites
-
 
 def get_urls_by_name(name: str) -> list[Site]:
     """"
@@ -52,10 +49,8 @@ def get_urls_by_name(name: str) -> list[Site]:
     finally:
         conn.close()
     
-    sites = list(map(lambda urls: Site(url=urls['name'], 
-                                     created_at=urls.get('created_at')), 
-                                     urls))
-    
+    sites = [Site(url=url['name'], created_at=url.get('created_at')) for url in urls]
+
     return sites
 
 
@@ -70,12 +65,12 @@ def get_urls_by_id(id_: int) -> Site:
                         FROM urls
                         WHERE id = %s'''
             cur.execute(q_select, (id_,))
-            urls = cur.fetchone()
+            url = cur.fetchone()
     finally:
         conn.close()
     
-    if urls:
-        return Site(url=urls['name'], created_at=urls.get('created_at'))
+    if url:
+        return Site(url=url['name'], created_at=url.get('created_at'))
     return None
 
 
