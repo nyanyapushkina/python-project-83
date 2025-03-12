@@ -30,9 +30,16 @@ def get_all_urls() -> list[Site]:
     finally:
         conn.close()
 
-    sites = [Site(id=url['id'], url=url['name'], created_at=url.get('created_at')) for url in urls]
+    sites = [Site(
+        id=url['id'],
+        url=url['name'],
+        created_at=url.get('created_at'),
+        last_check=url.get('last_check'),
+        status_code=url.get('status_code')
+    ) for url in urls]
 
     return sites
+
 
 def get_urls_by_name(name: str) -> list[Site]:
     """"
