@@ -30,7 +30,7 @@ def get_all_urls() -> list[Site]:
     finally:
         conn.close()
 
-    sites = list(map(lambda url: Site(url=urls['name'], 
+    sites = list(map(lambda urls: Site(url=urls['name'], 
                                      created_at=urls.get('created_at')), 
                                      urls))
 
@@ -52,7 +52,7 @@ def get_urls_by_name(name: str) -> list[Site]:
     finally:
         conn.close()
     
-    sites = list(map(lambda url: Site(url=urls['name'], 
+    sites = list(map(lambda urls: Site(url=urls['name'], 
                                      created_at=urls.get('created_at')), 
                                      urls))
     
