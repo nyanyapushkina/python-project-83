@@ -54,7 +54,6 @@ def urls():
                 flash('Страница не найдена', 'alert-danger')
                 return redirect(url_for('main.home'))
 
-
         except ValidationError as e:
             if isinstance(e, ZeroLengthError):
                 flash('URL обязателен', 'alert-danger')
