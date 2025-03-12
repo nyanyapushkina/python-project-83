@@ -44,7 +44,7 @@ def urls():
                 return redirect(url_for('main.home'))
 
         except URLExistsError as e:
-            norm_url = e.args[1]
+            norm_url = e.args[0]
             url_data = get_urls_by_name(norm_url)
             if url_data:
                 id_ = url_data[0]['id']
