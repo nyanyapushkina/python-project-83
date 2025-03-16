@@ -37,32 +37,37 @@ def add_url():
     try:
         norm_url = validate_url(url)
 
-        existing_url = get_urls_by_name(norm_url)
-        if existing_url:
-            id_ = existing_url[0].id
-            flash('Страница уже существует', 'alert-info')
-            return redirect(url_for('urls.url_show', id_=id_))
-
-        site = Site(url=norm_url)
-        site_id = add_site(site)
-        site.id = site_id
-
-        flash('Страница успешно добавлена', 'alert-success')
-        return redirect(url_for('urls.url_show', id_=site_id))
-
-    except ValidationError as e:
-        if isinstance(e, ZeroLengthError):
-            flash('URL обязателен', 'alert-danger')
-        elif isinstance(e, TooLongError):
-            flash('URL превышает 255 символов', 'alert-danger')
-        else:
-            flash('Некорректный URL', 'alert-danger')
-
+    except ZeroLengthError:
+        flash('URL обязателен', 'alert-danger')
         messages = get_flashed_messages(with_categories=True)
-
         return render_template('index.html', 
-                                url=url, 
-                                messages=messages), 422
+                               url=url, 
+                               messages=messages), 422
+    except TooLongError:
+        flash('URL превышает 255 символов', 'alert-danger')
+        messages = get_flashed_messages(with_categories=True)
+        return render_template('index.html', 
+                               url=url, 
+                               messages=messages), 422
+    except ValidationError:
+        flash('Некорректный URL', 'alert-danger')
+        messages = get_flashed_messages(with_categories=True)
+        return render_template('index.html', 
+                               url=url, 
+                               messages=messages), 422
+    
+    existing_url = get_urls_by_name(norm_url)
+    if existing_url:
+        id_ = existing_url[0].id
+        flash('Страница уже существует', 'alert-info')
+        return redirect(url_for('urls.url_show', id_=id_))
+
+    site = Site(url=norm_url)
+    site_id = add_site(site)
+    site.id = site_id
+
+    flash('Страница успешно добавлена', 'alert-success')
+    return redirect(url_for('urls.url_show', id_=site_id))
 
 
 @urls_bp.route('/<int:id_>')
