@@ -12,7 +12,7 @@ class ZeroLengthError(ValidationError):
 
 class TooLongError(ValidationError):
 
-    """More than 255 characters"""
+    """URL is too long"""
     pass
 
 
