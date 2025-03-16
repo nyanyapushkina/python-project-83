@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def get_html(url: str) -> str:
     """
     Gets HTML code of the webiste by its URL.
