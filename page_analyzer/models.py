@@ -24,4 +24,5 @@ class UrlCheck:
     h1: str
     title: str
     description: str
+    id: int = None
     created_at: datetime = None
