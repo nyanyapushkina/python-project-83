@@ -4,6 +4,9 @@ from page_analyzer.exceptions import (ZeroLengthError, TooLongError,
                                       InvalidURLError)
 
 
+MAX_LENGTH = 255
+
+
 def validate_url(url: str) -> str:
     """
     Checks if a URL is valid and normalizes it.
@@ -11,7 +14,7 @@ def validate_url(url: str) -> str:
     if not url:
         raise ZeroLengthError()
 
-    if len(url) > 255:
+    if len(url) > MAX_LENGTH:
         raise TooLongError()
 
     if not validators.url(url):
