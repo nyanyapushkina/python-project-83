@@ -130,13 +130,13 @@ def add_site(site: Site) -> int:
         conn.close()
 
 
-def add_check(check: UrlCheck):
+def add_check(check: UrlCheck) -> UrlCheck:
     """"
-    Adds a new check for a specific URL.
+    Adds a new check for a specific URL and returns the added check.
     """
     conn = connect(DATABASE_URL)
     try:
-        with conn.cursor() as cur:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
             q_insert = '''INSERT
                         INTO url_checks(
                             url_id,
@@ -145,7 +145,8 @@ def add_check(check: UrlCheck):
                             title,
                             description,
                             created_at)
-                        VALUES (%s, %s, %s, %s, %s, NOW())'''
+                        VALUES (%s, %s, %s, %s, %s, NOW())
+                        RETURNING *'''
             cur.execute(q_insert, (
                 check.url_id,
                 check.status_code,
@@ -153,6 +154,16 @@ def add_check(check: UrlCheck):
                 check.title,
                 check.description
             ))
+            check_data = cur.fetchone()
             conn.commit()
+            return UrlCheck(
+                id=check_data['id'],
+                url_id=check_data['url_id'],
+                status_code=check_data['status_code'],
+                h1=check_data['h1'],
+                title=check_data['title'],
+                description=check_data['description'],
+                created_at=check_data['created_at']
+            )
     finally:
         conn.close()

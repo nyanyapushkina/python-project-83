@@ -96,7 +96,10 @@ def url_check(id_):
         flash('Произошла ошибка при проверке', 'alert-danger')
     else:
         check['url_id'] = id_
-        add_check(UrlCheck(**check))
-        flash('Страница успешно проверена', 'alert-success')
+        added_check = add_check(UrlCheck(**check))
+        if added_check:
+            flash('Страница успешно проверена', 'alert-success')
+        else:
+            flash('Ошибка при добавлении проверки', 'alert-danger')
 
     return redirect(url_for('urls.url_show', id_=id_))
